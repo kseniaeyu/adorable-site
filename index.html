@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adorable — Mazāk papīru. Vairāk laika rūpēm.</title>
+  <style>
+    /* ── Reset & Base ───────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --coral:       #F95B53;
+      --coral-dark:  #D94540;
+      --coral-light: #FBE9E7;
+      --peach:       #FDF2EF;
+      --peach-mid:   #F9E5E0;
+      --white:       #FFFFFF;
+      --dark:        #1E1E1E;
+      --mid:         #555555;
+      --light:       #999999;
+      --r:           16px;
+      --sh:          0 4px 24px rgba(249,91,83,.10);
+      --sh-card:     0 2px 16px rgba(0,0,0,.06);
+      --t:           .28s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+      color: var(--dark);
+      background: var(--white);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ── Buttons ────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 11px 24px; border-radius: 50px;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      border: none; transition: all var(--t); white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--coral); color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--coral-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(249,91,83,.35);
+    }
+    .btn-ghost {
+      background: transparent; color: var(--dark);
+      border: 1.5px solid rgba(0,0,0,.14);
+    }
+    .btn-ghost:hover {
+      border-color: var(--coral); color: var(--coral);
+      transform: translateY(-2px);
+    }
+    .btn-white {
+      background: #fff; color: var(--coral);
+    }
+    .btn-white:hover {
+      background: rgba(255,255,255,.9);
+      transform: translateY(-2px);
+    }
+    .btn-lg { padding: 14px 30px; font-size: 15px; }
+
+    /* ── Navbar ─────────────────────────────────────────── */
+    #navbar {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(249,91,83,.08);
+      padding: 0 6%;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: box-shadow var(--t);
+    }
+    #navbar.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,.07); }
+
+    .logo {
+      display: flex; align-items: center; gap: 9px;
+      font-weight: 800; font-size: 20px; letter-spacing: -.02em;
+    }
+    .logo-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--coral-light);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width: 26px; height: 26px; }
+
+    .nav-links {
+      display: flex; gap: 32px; list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px; font-weight: 500; color: var(--mid);
+      transition: color var(--t);
+    }
+    .nav-links a:hover { color: var(--coral); }
+
+    .hamburger {
+      display: none; background: none; border: none; cursor: pointer;
+      flex-direction: column; gap: 5px; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--dark); border-radius: 2px; transition: all var(--t);
+    }
+
+    /* Mobile menu */
+    #mobile-nav {
+      display: none; flex-direction: column;
+      position: fixed; top: 64px; left: 0; right: 0;
+      background: #fff; padding: 16px 6% 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08); z-index: 199;
+    }
+    #mobile-nav.open { display: flex; }
+    #mobile-nav a {
+      padding: 13px 0; font-size: 16px; font-weight: 600;
+      border-bottom: 1px solid #F3F3F3; color: var(--dark);
+      transition: color var(--t);
+    }
+    #mobile-nav a:last-child { border: none; }
+    #mobile-nav a:hover { color: var(--coral); }
+
+    /* ── Section helpers ────────────────────────────────── */
+    .section-wrap { max-width: 1160px; margin: 0 auto; padding: 0 6%; }
+
+    .section-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--coral-light); color: var(--coral);
+      padding: 5px 14px; border-radius: 50px;
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 3.2vw, 44px);
+      font-weight: 800; line-height: 1.15;
+      letter-spacing: -.025em; margin-bottom: 14px;
+    }
+    .section-title em { color: var(--coral); font-style: normal; }
+
+    .section-desc {
+      font-size: 16px; line-height: 1.72; color: var(--mid);
+      max-width: 560px;
+    }
+
+    .text-center { text-align: center; }
+    .text-center .section-desc { margin: 0 auto; }
+
+    /* ── Hero ───────────────────────────────────────────── */
+    #hero {
+      background: var(--peach);
+      padding: 84px 6% 72px;
+    }
+    .hero-inner {
+      max-width: 1160px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(249,91,83,.12); color: var(--coral);
+      padding: 6px 16px; border-radius: 50px;
+      font-size: 13px; font-weight: 700;
+      margin-bottom: 22px;
+      animation: fadeUp .6s both;
+    }
+    .hero-title {
+      font-size: clamp(38px, 4.8vw, 64px);
+      font-weight: 900; line-height: 1.1;
+      letter-spacing: -.03em; margin-bottom: 18px;
+      animation: fadeUp .6s .08s both;
+    }
+    .hero-title em { color: var(--coral); font-style: normal; }
+    .hero-desc {
+      font-size: 17px; line-height: 1.7; color: var(--mid);
+      margin-bottom: 34px; max-width: 460px;
+      animation: fadeUp .6s .16s both;
+    }
+    .hero-cta {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      animation: fadeUp .6s .24s both;
+    }
+
+    /* Hero visual */
+    .hero-visual {
+      display: flex; justify-content: center; align-items: center;
+      position: relative; height: 400px;
+      animation: fadeRight .8s .1s both;
+    }
+    .mascot-wrap {
+      position: relative; width: 300px; height: 300px;
+    }
+    .mascot-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      box-shadow: 0 28px 56px rgba(249,91,83,.32), 0 0 0 8px rgba(249,91,83,.08);
+      animation: floatMascot 4s ease-in-out infinite;
+    }
+
+    .float-card {
+      position: absolute;
+      background: #fff; border-radius: 14px;
+      padding: 11px 15px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.10);
+      display: flex; align-items: center; gap: 10px;
+      white-space: nowrap;
+    }
+    .float-card .fc-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; background: var(--coral-light);
+    }
+    .float-card .fc-label { font-size: 11px; color: var(--light); line-height: 1; }
+    .float-card .fc-val   { font-size: 13px; font-weight: 700; margin-top: 2px; }
+
+    .fc-top    { top: 24px;  right: 0;   animation: float1 3.4s ease-in-out infinite; }
+    .fc-bottom { bottom: 52px; right: -24px; animation: float2 3.8s .6s ease-in-out infinite; }
+
+    /* ── App window ──────────────────────────────────────── */
+    #app-demo {
+      background: var(--white);
+      padding: 80px 6%;
+    }
+    .app-window {
+      max-width: 920px; margin: 48px auto 0;
+      background: #fff; border-radius: 20px;
+      box-shadow: 0 28px 80px rgba(0,0,0,.11);
+      border: 1px solid rgba(0,0,0,.055);
+      overflow: hidden;
+    }
+    .win-bar {
+      background: #fff; border-bottom: 1px solid #F2F2F2;
+      padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      flex-wrap: wrap;
+    }
+    .win-logo {
+      display: flex; align-items: center; gap: 7px;
+      font-weight: 800; font-size: 14px;
+    }
+    .win-logo-dot {
+      width: 22px; height: 22px; border-radius: 6px;
+      background: var(--coral-light);
+      display: flex; align-items: center; justify-content: center; font-size: 11px;
+    }
+    .win-tabs {
+      display: flex; gap: 2px; overflow-x: auto; flex: 1;
+    }
+    .win-tab {
+      padding: 6px 11px; border-radius: 6px;
+      font-size: 11px; color: #aaa; white-space: nowrap; cursor: pointer;
+    }
+    .win-tab.on { background: var(--coral-light); color: var(--coral); font-weight: 700; }
+    .win-user {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--coral); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; flex-shrink: 0;
+    }
+
+    .win-body { padding: 20px 20px 28px; }
+    .win-body-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .win-body-title { font-size: 15px; font-weight: 800; }
+    .win-body-sub   { font-size: 11px; color: var(--light); margin-top: 2px; }
+
+    .win-stats {
+      display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .win-stat {
+      background: #F9F9F9; border-radius: 10px;
+      padding: 10px 16px; min-width: 72px;
+    }
+    .win-stat .ws-n { font-size: 22px; font-weight: 800; line-height: 1; }
+    .win-stat .ws-n.red { color: var(--coral); }
+    .win-stat .ws-l { font-size: 10px; color: #aaa; margin-top: 3px; }
+
+    .win-table { width: 100%; border-collapse: collapse; }
+    .win-table th {
+      font-size: 10px; color: #bbb; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      padding: 6px 10px; border-bottom: 1px solid #F0F0F0; text-align: left;
+    }
+    .win-table td { padding: 11px 10px; font-size: 12px; border-bottom: 1px solid #F8F8F8; }
+    .win-table tr:last-child td { border: none; }
+
+    .client-cell { display: flex; align-items: center; gap: 8px; }
+    .av {
+      width: 28px; height: 28px; border-radius: 50%;
+      color: #fff; font-size: 11px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .av-r { background: var(--coral); }
+    .av-b { background: #4F6AEE; }
+    .av-g { background: #2D9E5F; }
+    .av-o { background: #E07B00; }
+
+    .client-name  { font-size: 12px; font-weight: 700; }
+    .client-id    { font-size: 10px; color: #bbb; }
+
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 9px; border-radius: 50px;
+      font-size: 10px; font-weight: 700;
+    }
+    .badge-green  { background: #E8F8EE; color: #2D9E5F; }
+    .badge-blue   { background: #EEF2FF; color: #4F6AEE; }
+    .badge-orange { background: #FFF3E0; color: #E07B00; }
+    .badge-coral  { background: var(--coral-light); color: var(--coral); }
+
+    /* ── Features ───────────────────────────────────────── */
+    #features {
+      background: var(--peach);
+      padding: 88px 6%;
+    }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 22px;
+      max-width: 1160px; margin: 56px auto 0;
+    }
+    .feat-card {
+      background: #fff; border-radius: var(--r); padding: 28px;
+      box-shadow: var(--sh-card);
+      transition: transform var(--t), box-shadow var(--t);
+      opacity: 0; transform: translateY(22px);
+    }
+    .feat-card.in {
+      opacity: 1; transform: none;
+      transition: opacity .55s ease, transform .55s ease, box-shadow var(--t);
+    }
+    .feat-card:hover {
+      transform: translateY(-5px) !important;
+      box-shadow: 0 10px 36px rgba(249,91,83,.13);
+    }
+    .feat-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: var(--coral-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 16px;
+    }
+    .feat-title { font-size: 17px; font-weight: 800; margin-bottom: 9px; }
+    .feat-desc  { font-size: 14px; line-height: 1.65; color: var(--mid); }
+
+    /* ── Stats ──────────────────────────────────────────── */
+    #stats { background: var(--peach-mid); padding: 60px 6%; }
+    .stats-row {
+      max-width: 760px; margin: 0 auto;
+      display: flex; justify-content: space-around; gap: 40px; flex-wrap: wrap;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-size: clamp(52px, 6vw, 76px); font-weight: 900;
+      color: var(--coral); letter-spacing: -.04em; line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-lbl { font-size: 15px; color: var(--mid); font-weight: 500; }
+
+    /* ── Pricing ────────────────────────────────────────── */
+    #pricing { background: #fff; padding: 88px 6%; }
+    .pricing-center {
+      display: flex; justify-content: center; margin-top: 52px;
+    }
+    .pricing-card {
+      background: var(--coral); color: #fff;
+      border-radius: 26px; padding: 42px 48px;
+      max-width: 440px; width: 100%;
+      box-shadow: 0 24px 64px rgba(249,91,83,.32);
+    }
+    .price-tag { font-size: 64px; font-weight: 900; letter-spacing: -.04em; line-height: 1; }
+    .price-tag sup { font-size: 28px; vertical-align: super; margin-right: 2px; }
+    .price-per { font-size: 15px; opacity: .75; margin: 6px 0 30px; }
+    .price-list { list-style: none; margin-bottom: 32px; }
+    .price-list li {
+      display: flex; align-items: center; gap: 11px;
+      padding: 9px 0; font-size: 15px;
+      border-bottom: 1px solid rgba(255,255,255,.15);
+    }
+    .price-list li:last-child { border: none; }
+    .price-check {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; flex-shrink: 0;
+    }
+
+    /* ── About ──────────────────────────────────────────── */
+    #about { background: var(--peach); padding: 88px 6%; }
+    .about-inner {
+      max-width: 1160px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    }
+    .about-text .section-title,
+    .about-text .section-desc { text-align: left; }
+    .about-points { margin-top: 28px; display: flex; flex-direction: column; gap: 18px; }
+    .about-point { display: flex; gap: 14px; align-items: flex-start; }
+    .about-pt-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: rgba(249,91,83,.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+    }
+    .about-pt-text h4 { font-size: 15px; font-weight: 800; margin-bottom: 3px; }
+    .about-pt-text p  { font-size: 14px; color: var(--mid); line-height: 1.6; }
+
+    .about-cards {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .ac {
+      background: #fff; border-radius: 18px; padding: 24px;
+      box-shadow: var(--sh-card);
+    }
+    .ac.wide { grid-column: span 2; background: var(--coral); color: #fff; }
+    .ac .n { font-size: 38px; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
+    .ac .d { font-size: 14px; margin-top: 5px; opacity: .8; }
+    .ac:not(.wide) .n { color: var(--coral); }
+
+    /* ── Contact ────────────────────────────────────────── */
+    #contact { background: #fff; padding: 88px 6%; }
+    .contact-inner {
+      max-width: 960px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1.5fr; gap: 64px; align-items: start;
+    }
+    .contact-meta h3 { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+    .contact-meta p  { font-size: 15px; color: var(--mid); line-height: 1.7; margin-bottom: 28px; }
+    .cdet { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .cdet-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--coral-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .cdet-text small { display: block; font-size: 11px; color: var(--light); }
+    .cdet-text a { font-size: 15px; font-weight: 600; color: var(--dark); transition: color var(--t); }
+    .cdet-text a:hover { color: var(--coral); }
+
+    .contact-form {
+      background: var(--peach); border-radius: 24px; padding: 36px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .fg { margin-bottom: 16px; }
+    .fg label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+    .fg input, .fg textarea, .fg select {
+      width: 100%; padding: 12px 15px; border-radius: 10px;
+      border: 1.5px solid rgba(0,0,0,.08); font-size: 14px;
+      font-family: inherit; background: #fff; color: var(--dark); outline: none;
+      transition: border-color var(--t), box-shadow var(--t);
+    }
+    .fg input:focus, .fg textarea:focus, .fg select:focus {
+      border-color: var(--coral);
+      box-shadow: 0 0 0 3px rgba(249,91,83,.10);
+    }
+    .fg textarea { height: 108px; resize: vertical; }
+    .form-ok {
+      display: none; background: #E8F8EE; color: #2D9E5F;
+      border-radius: 10px; padding: 14px; text-align: center;
+      font-size: 14px; font-weight: 700; margin-top: 12px;
+    }
+
+    /* ── Footer ─────────────────────────────────────────── */
+    footer { background: #181818; color: #fff; padding: 52px 6% 28px; }
+    .footer-top {
+      max-width: 1160px; margin: 0 auto;
+      display: flex; justify-content: space-between;
+      gap: 40px; flex-wrap: wrap;
+      padding-bottom: 36px; border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .ft-brand p { font-size: 14px; color: rgba(255,255,255,.45); margin-top: 10px; max-width: 240px; line-height: 1.6; }
+    .ft-nav h4 { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.35); margin-bottom: 14px; }
+    .ft-nav ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .ft-nav a { font-size: 14px; color: rgba(255,255,255,.65); transition: color var(--t); }
+    .ft-nav a:hover { color: var(--coral); }
+    .footer-bottom {
+      max-width: 1160px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 24px; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p { font-size: 13px; color: rgba(255,255,255,.3); }
+
+    /* ── Animations ─────────────────────────────────────── */
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:none; } }
+    @keyframes fadeRight{ from { opacity:0; transform:translateX(22px); } to { opacity:1; transform:none; } }
+    @keyframes floatMascot {
+      0%,100% { transform: translateY(0)   rotate(-1deg); }
+      50%      { transform: translateY(-12px) rotate(1deg); }
+    }
+    @keyframes float1 {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+    @keyframes float2 {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .hero-inner    { grid-template-columns: 1fr; }
+      .hero-visual   { display: none; }
+      .about-inner   { grid-template-columns: 1fr; gap: 48px; }
+      .contact-inner { grid-template-columns: 1fr; gap: 40px; }
+    }
+    @media (max-width: 720px) {
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+    }
+    @media (max-width: 500px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .form-row      { grid-template-columns: 1fr; }
+      .about-cards   { grid-template-columns: 1fr; }
+      .ac.wide       { grid-column: span 1; }
+      .win-stats, .win-table thead { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ─────────────────────────────────────────── -->
+<nav id="navbar">
+  <a href="#hero" class="logo">
+    <img src="adorable_logo.png" alt="adorable" style="height:40px;width:auto;display:block;">
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#features">Iespējas</a></li>
+    <li><a href="#pricing">Cenas</a></li>
+    <li><a href="#about">Par mums</a></li>
+    <li><a href="#contact">Kontakti</a></li>
+  </ul>
+
+  <a href="#contact" class="btn btn-primary nav-cta">Pamēģināt bez maksas →</a>
+
+  <button class="hamburger" id="hbg" onclick="toggleMenu()" aria-label="Izvēlne">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div id="mobile-nav">
+  <a href="#features" onclick="closeMenu()">Iespējas</a>
+  <a href="#pricing"  onclick="closeMenu()">Cenas</a>
+  <a href="#about"    onclick="closeMenu()">Par mums</a>
+  <a href="#contact"  onclick="closeMenu()">Kontakti</a>
+  <a href="#contact"  onclick="closeMenu()" class="btn btn-primary" style="margin-top:10px;justify-content:center;">Pamēģināt bez maksas</a>
+</div>
+
+<!-- ── HERO ───────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-inner">
+
+    <!-- Text -->
+    <div class="hero-content">
+      <div class="hero-badge">✨ Pansionātiem Latvijā</div>
+      <h1 class="hero-title">Mazāk papīru.<br><em>Vairāk laika</em><br>rūpēm.</h1>
+      <p class="hero-desc">
+        Adorable palīdz pansionātiem ērti pārvaldīt iemītniekus, pieteikumus,
+        medikamentus, darbinieku ikdienu un svarīgos dokumentus — vienuviet,
+        saprotami un bez lielas sarežģījuma.
+      </p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-primary btn-lg">Pieteikt demo →</a>
+        <a href="#contact" class="btn btn-ghost btn-lg">Sākt izmēģinājumu</a>
+      </div>
+    </div>
+
+    <!-- Visual -->
+    <div class="hero-visual">
+
+      <!-- Floating card top -->
+      <div class="float-card fc-top">
+        <div class="fc-icon">📋</div>
+        <div>
+          <div class="fc-label">Aplikācijā</div>
+          <div class="fc-val">4 jauni uzdevumi</div>
+        </div>
+      </div>
+
+      <!-- Mascot Image -->
+      <div class="mascot-wrap">
+        <img src="adorable_hero.jpg" alt="Adorable maskots" class="mascot-img">
+      </div>
+
+      <!-- Floating card bottom -->
+      <div class="float-card fc-bottom">
+        <div class="fc-icon">✅</div>
+        <div>
+          <div class="fc-label">Atjauninājumi</div>
+          <div class="fc-val">100% email sūtīts</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── APP DEMO ───────────────────────────────────────── -->
+<section id="app-demo">
+  <div class="section-wrap text-center">
+    <div class="section-label">🖥️ Lietotne</div>
+    <h2 class="section-title">Vienkārša, <em>skaidra sistēma</em></h2>
+    <p class="section-desc">Dizainēts tā, lai ikviens darbinieks justos ērti — arī bez lielas digitālas pieredzes.</p>
+  </div>
+
+  <div style="max-width:960px;margin:0 auto;padding:0 6%;">
+    <div class="app-window">
+      <!-- Window bar -->
+      <div class="win-bar">
+        <div class="win-logo">
+          <span class="win-logo-dot">🐾</span>
+          adorable
+        </div>
+        <div class="win-tabs">
+          <div class="win-tab">Dashboard</div>
+          <div class="win-tab">Iemītnieki</div>
+          <div class="win-tab on">Pieteikumi</div>
+          <div class="win-tab">Līgumi</div>
+          <div class="win-tab">Noliktava</div>
+          <div class="win-tab">Medikamenti</div>
+          <div class="win-tab">Gultu fonds</div>
+        </div>
+        <div class="win-user">AD</div>
+      </div>
+
+      <!-- Body -->
+      <div class="win-body">
+        <div class="win-body-head">
+          <div>
+            <div class="win-body-title">Visi pieteikumi un klienti</div>
+            <div class="win-body-sub">4 ieraksti (paraugdati)</div>
+          </div>
+          <button class="btn btn-primary" style="font-size:12px;padding:7px 14px;">+ Jauns pieteikums</button>
+        </div>
+
+        <div class="win-stats">
+          <div class="win-stat"><div class="ws-n red">1</div><div class="ws-l">Pieteikumi</div></div>
+          <div class="win-stat"><div class="ws-n red">1</div><div class="ws-l">Konsultācijas</div></div>
+          <div class="win-stat"><div class="ws-n">0</div><div class="ws-l">Atteices</div></div>
+          <div class="win-stat"><div class="ws-n red">1</div><div class="ws-l">Līgumi</div></div>
+          <div class="win-stat"><div class="ws-n red">1</div><div class="ws-l">Ievakts</div></div>
+          <div class="win-stat"><div class="ws-n">0</div><div class="ws-l">Aizbraukti</div></div>
+        </div>
+
+        <table class="win-table">
+          <thead>
+            <tr>
+              <th>Klients</th>
+              <th>Kontakti</th>
+              <th>Statuss</th>
+              <th>Apstiprine</th>
+              <th>Cena</th>
+              <th>Datums</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="client-cell">
+                  <div class="av av-r">MO</div>
+                  <div><div class="client-name">Mārtiņš Ozoliņš</div><div class="client-id">L-2025-001</div></div>
+                </div>
+              </td>
+              <td style="color:#aaa;font-size:11px;">martins.oz@inbox.lv<br>+371 29112222</td>
+              <td><span class="badge badge-blue">Līgums</span></td>
+              <td style="font-size:11px;color:#aaa;">3. Smons</td>
+              <td style="font-weight:700;">77 €/d</td>
+              <td style="color:#aaa;font-size:11px;">2025-12-16</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="client-cell">
+                  <div class="av av-b">LK</div>
+                  <div><div class="client-name">Līga Kalniņa</div><div class="client-id">L-2025-002</div></div>
+                </div>
+              </td>
+              <td style="color:#aaa;font-size:11px;">liga.k@gmail.com<br>+371 26503444</td>
+              <td><span class="badge badge-green">Ievakts</span></td>
+              <td style="font-size:11px;color:#aaa;">2. Smons</td>
+              <td style="font-weight:700;">70 €/d</td>
+              <td style="color:#aaa;font-size:11px;">2025-12-16</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="client-cell">
+                  <div class="av av-g">JB</div>
+                  <div><div class="client-name">Jānis Bērziņš</div><div class="client-id">L-2025-003</div></div>
+                </div>
+              </td>
+              <td style="color:#aaa;font-size:11px;">janis.b@outlook.com<br>+371 25088888</td>
+              <td><span class="badge badge-coral">Konsultācija</span></td>
+              <td style="font-size:11px;color:#aaa;">1. Smons</td>
+              <td style="font-weight:700;">85 €/d</td>
+              <td style="color:#aaa;font-size:11px;">2025-12-17</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="client-cell">
+                  <div class="av av-o">AL</div>
+                  <div><div class="client-name">Anna Liepiņa</div><div class="client-id">L-2025-004</div></div>
+                </div>
+              </td>
+              <td style="color:#aaa;font-size:11px;">anna@inbox.lv<br>+371 26777888</td>
+              <td><span class="badge badge-orange">Pieteikums</span></td>
+              <td style="font-size:11px;color:#aaa;">—</td>
+              <td style="font-weight:700;">—</td>
+              <td style="color:#aaa;font-size:11px;">2025-12-18</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ──────────────────────────────────────── -->
+<section id="features">
+  <div class="section-wrap text-center">
+    <div class="section-label">⚡ Iespējas</div>
+    <h2 class="section-title">Viss svarīgais <em>vienā vietā</em></h2>
+    <p class="section-desc">
+      Pieteikumi, iemītnieki, līgumi, gultu fonds, medikamenti un atjauninājumi —
+      viss vienā saprotamā sistēmā.
+    </p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon">📄</div>
+      <div class="feat-title">Mazāk manuāla darba</div>
+      <p class="feat-desc">Mazāk papīra žurnālu, mazāk Excel failu un mazāk informācijas, kas pazūd starp cilvēkiem.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">👥</div>
+      <div class="feat-title">Vieglāka ikdiena komandai</div>
+      <p class="feat-desc">Sistēma veidota tā, lai tā būtu ērti lietot arī cilvēkiem bez lielas digitālās pieredzes.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">Labāka pārskatāmība vadībai</div>
+      <p class="feat-desc">Svarīgā informācija par iemītniekiem, kapacitāti, dokumentiem un medikamentiem vienmēr ir pa rokai.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📅</div>
+      <div class="feat-title">Darbinieku plānošana</div>
+      <p class="feat-desc">Ērtāk organizēt komandas darbu, nosodot un ikdienas procesus bez lieka jucekļa.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">💊</div>
+      <div class="feat-title">Medikamenti un noliktava</div>
+      <p class="feat-desc">Pārskatāma medikamentu un citu svarīgu resursu uzskaite, lai nepalaistu garām svarīgo.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🏠</div>
+      <div class="feat-title">Kapacitāte un brīvās vietas</div>
+      <p class="feat-desc">Skaidrs pārskats par pieejamajām vietām, nosodot un aktuālo situāciju iestādē.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ──────────────────────────────────────────── -->
+<section id="stats">
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-num" data-target="30">0</div>
+      <div class="stat-lbl">Pansionātu</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-target="500">0</div>
+      <div class="stat-lbl">Iemītnieku</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-target="10">0</div>
+      <div class="stat-lbl">Saglabātas darbinieku stundas</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ───────────────────────────────────────── -->
+<section id="pricing">
+  <div class="section-wrap text-center">
+    <div class="section-label">💰 Cenas</div>
+    <h2 class="section-title">Cenas, kas pielāgotas <em>Jūsu iestādes vajadzībām</em></h2>
+    <p class="section-desc">Katrs pansionāts strādā citādi, tāpēc piedāvājam pielāgojumu iestādes lielumam, komandai un nepieciešamajām funkcijām.</p>
+  </div>
+
+  <div class="pricing-center">
+    <div class="pricing-card">
+      <div class="price-tag"><sup>€</sup>99</div>
+      <div class="price-per">/mēn. · viss iekļauts</div>
+      <ul class="price-list">
+        <li><span class="price-check">✓</span> Līdz 60 iemītniekiem</li>
+        <li><span class="price-check">✓</span> Neierobežots darbinieku skaits</li>
+        <li><span class="price-check">✓</span> Iemītnieku pārvaldība</li>
+        <li><span class="price-check">✓</span> Pieteikumi un dokumenti</li>
+        <li><span class="price-check">✓</span> Medikamentu un noliktavas uzskaite</li>
+        <li><span class="price-check">✓</span> Atbalsts ieviešanai</li>
+      </ul>
+      <a href="#contact" class="btn btn-white btn-lg" style="width:100%;justify-content:center;">
+        Sazināties par demo
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ─────────────────────────────────────────── -->
+<section id="about">
+  <div class="about-inner">
+    <div class="about-text">
+      <div class="section-label">🤝 Par mums</div>
+      <h2 class="section-title">Veidots kopā<br>ar <em>pansionātiem</em></h2>
+      <p class="section-desc">Adorable radās no reālas vajadzības — mēs pavadījām laiku pansionātos, runājām ar darbiniekiem un vadību, lai saprastu, kas tiešām traucē ikdienā.</p>
+      <div class="about-points">
+        <div class="about-point">
+          <div class="about-pt-icon">🎯</div>
+          <div class="about-pt-text">
+            <h4>Fokuss uz aprūpes nozari</h4>
+            <p>Mēs esam specializēti tieši Latvijas pansionātu vajadzībām — ne universāls CRM, bet rīks, kas saprast Jūsu darbu.</p>
+          </div>
+        </div>
+        <div class="about-point">
+          <div class="about-pt-icon">🚀</div>
+          <div class="about-pt-text">
+            <h4>Ātra ieviešana</h4>
+            <p>Pirmā apmācība, importēšana un ieviešana — ar mūsu atbalstu parasti aizņem mazāk par nedēļu.</p>
+          </div>
+        </div>
+        <div class="about-point">
+          <div class="about-pt-icon">💬</div>
+          <div class="about-pt-text">
+            <h4>Latvijas atbalsts</h4>
+            <p>Mūsu komanda ir pieejama latviski — e-pasts, tālrunis un tiešraides tērzēšana darba dienās.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-cards">
+      <div class="ac wide">
+        <div class="n">2024</div>
+        <div class="d">gadā dibināts ar mērķi digitalizēt Latvijas pansionātus</div>
+      </div>
+      <div class="ac">
+        <div class="n">30+</div>
+        <div class="d">pansionātu uzticas Adorable</div>
+      </div>
+      <div class="ac">
+        <div class="n">99%</div>
+        <div class="d">klientu turpina lietot pēc izmēģinājuma</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ───────────────────────────────────────── -->
+<section id="contact">
+  <div class="section-wrap text-center" style="margin-bottom:0;">
+    <div class="section-label">✉️ Kontakti</div>
+    <h2 class="section-title">Sāciet ar <em>bezmaksas demo</em></h2>
+    <p class="section-desc">Aizpildiet formu un mēs sazināsimies 1 darba dienas laikā, lai parādītu sistēmu darbībā.</p>
+  </div>
+
+  <div class="contact-inner" style="margin-top:52px;">
+    <!-- Info -->
+    <div class="contact-meta">
+      <h3>Sazināties ar mums</h3>
+      <p>Jautājumi? Esam pieejami latviski pa e-pastu un tālruni.</p>
+
+      <div class="cdet">
+        <div class="cdet-icon">📧</div>
+        <div class="cdet-text">
+          <small>E-pasts</small>
+          <a href="mailto:info@adorable.lv">info@adorable.lv</a>
+        </div>
+      </div>
+      <div class="cdet">
+        <div class="cdet-icon">📞</div>
+        <div class="cdet-text">
+          <small>Tālrunis</small>
+          <a href="tel:+37120000000">+371 200 00 000</a>
+        </div>
+      </div>
+      <div class="cdet">
+        <div class="cdet-icon">📍</div>
+        <div class="cdet-text">
+          <small>Adrese</small>
+          <a href="#">Rīga, Latvija</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="contact-form">
+      <form id="contactForm" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="fg">
+            <label>Vārds *</label>
+            <input type="text" placeholder="Jānis" required />
+          </div>
+          <div class="fg">
+            <label>Uzvārds *</label>
+            <input type="text" placeholder="Bērziņš" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="fg">
+            <label>E-pasts *</label>
+            <input type="email" placeholder="janis@pansionats.lv" required />
+          </div>
+          <div class="fg">
+            <label>Tālrunis</label>
+            <input type="tel" placeholder="+371 2X XXX XXX" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Iestādes nosaukums *</label>
+          <input type="text" placeholder="Pansionāta nosaukums" required />
+        </div>
+        <div class="fg">
+          <label>Cik iemītnieku?</label>
+          <select>
+            <option value="">Izvēlieties...</option>
+            <option>Līdz 20</option>
+            <option>20–60</option>
+            <option>60–120</option>
+            <option>Vairāk par 120</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Ziņojums</label>
+          <textarea placeholder="Ko vēlaties uzzināt par Adorable?"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;">
+          Nosūtīt pieteikumu →
+        </button>
+      </form>
+      <div class="form-ok" id="formOk">
+        ✅ Paldies! Sazināsimies ar Jums 1 darba dienas laikā.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────── -->
+<footer>
+  <div class="footer-top">
+    <div class="ft-brand">
+      <a href="#hero">
+        <img src="adorable_logo.png" alt="adorable" style="height:36px;width:auto;display:block;filter:brightness(0) invert(1);">
+      </a>
+      <p>Pansionātu pārvaldības platforma Latvijā — modernā, vienkāršā, saprotamā.</p>
+    </div>
+
+    <div class="ft-nav">
+      <h4>Navigācija</h4>
+      <ul>
+        <li><a href="#features">Iespējas</a></li>
+        <li><a href="#pricing">Cenas</a></li>
+        <li><a href="#about">Par mums</a></li>
+        <li><a href="#contact">Kontakts</a></li>
+      </ul>
+    </div>
+
+    <div class="ft-nav">
+      <h4>Kontakti</h4>
+      <ul>
+        <li><a href="mailto:info@adorable.lv">info@adorable.lv</a></li>
+        <li><a href="tel:+37120000000">+371 200 00 000</a></li>
+        <li><a href="#">Rīga, Latvija</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Adorable. Visas tiesības aizsargātas.</p>
+    <p>Veidots ar ❤️ Latvijā</p>
+  </div>
+</footer>
+
+<!-- ── SCRIPTS ───────────────────────────────────────── -->
+<script>
+  /* Navbar shadow on scroll */
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  /* Mobile menu */
+  function toggleMenu() {
+    const m = document.getElementById('mobile-nav');
+    m.classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobile-nav').classList.remove('open');
+  }
+
+  /* Scroll reveal for feature cards */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 90);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.feat-card').forEach(c => observer.observe(c));
+
+  /* Stats counter */
+  function animateCount(el) {
+    const target = parseInt(el.dataset.target);
+    const plus   = el.parentElement.querySelector('.stat-lbl') && true;
+    const dur    = 1600;
+    const step   = 16;
+    const inc    = target / (dur / step);
+    let cur = 0;
+    const timer = setInterval(() => {
+      cur += inc;
+      if (cur >= target) { cur = target; clearInterval(timer); }
+      el.textContent = Math.floor(cur) + '+';
+    }, step);
+  }
+
+  const statsObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.stat-num').forEach(animateCount);
+        statsObs.disconnect();
+      }
+    });
+  }, { threshold: 0.4 });
+
+  const statsSection = document.getElementById('stats');
+  if (statsSection) statsObs.observe(statsSection);
+
+  /* Contact form */
+  function handleSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('contactForm');
+    const ok   = document.getElementById('formOk');
+    form.style.display = 'none';
+    ok.style.display   = 'block';
+  }
+
+  /* Smooth reveal on scroll for generic elements */
+  const revObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        revObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll(
+    '.app-window, .pricing-card, .about-inner, .contact-inner, .stats-row'
+  ).forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(28px)';
+    el.style.transition = 'opacity .65s ease, transform .65s ease';
+    revObs.observe(el);
+  });
+</script>
+</body>
+</html>
